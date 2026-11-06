@@ -14,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.R
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,7 +22,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,25 +31,24 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.mvvm.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormSiswa(
-    //edit 1 : parameter pilihanJK dan onSubmitButtonClicked
     pilihanJK: List<String>,
     onSubmitButtonClicked: (MutableList<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    //edit 2 : tambahkan 4 variable dibawah ini
     var txtNama by rememberSaveable { mutableStateOf("") }
-    var txtAlamat by remember { mutableStateOf("") }
-    var txtGender by remember { mutableStateOf("") }
-    val listData: MutableList<String> = mutableListOf(txtNama, txtGender, txtAlamat)
+    var txtAlamat by rememberSaveable { mutableStateOf("") }
+    var txtGender by rememberSaveable { mutableStateOf("") }
 
-    Scaffold(modifier = Modifier,
+    Scaffold(modifier = modifier,
         topBar = {
-            TopAppBar(title = { Text(stringResource(id = R.string.app_name), color = Color.White) },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(colorResource(id = R.color.purple_500))
+            TopAppBar(
+                title = { Text(stringResource(id = R.string.app_name), color = Color.White) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = colorResource(id = R.color.purple_500))
             )
         }) { isiRuang ->
         Column(
@@ -59,7 +56,6 @@ fun FormSiswa(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //edit 3 : value, onValueChange, selected, onClick
             OutlinedTextField(
                 value = txtNama,
                 singleLine = true,
@@ -79,16 +75,17 @@ fun FormSiswa(
                 color = Color.Blue
             )
 
-            // Lanjutan di dalam Column:
             Row {
                 pilihanJK.forEach { item ->
-                    Row(modifier = Modifier.selectable(
-                        selected = txtGender == item,
-                        onClick = {
-                            txtGender = item
-                        }
-                    ),
-                        verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.selectable(
+                            selected = txtGender == item,
+                            onClick = {
+                                txtGender = item
+                            }
+                        ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         RadioButton(
                             selected = txtGender == item,
                             onClick = {
@@ -121,9 +118,11 @@ fun FormSiswa(
 
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                modifier = Modifier.fillMaxWidth(1f),
-                enabled = txtAlamat.isNotEmpty(),
-                onClick = { onSubmitButtonClicked(listData) }
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+                enabled = txtNama.isNotBlank() && txtGender.isNotBlank() && txtAlamat.isNotBlank(),
+                onClick = { onSubmitButtonClicked(mutableListOf(txtNama, txtGender, txtAlamat)) }
             ) {
                 Text(stringResource(R.string.submit))
             }

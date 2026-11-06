@@ -7,9 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.R
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.mvvm.R
 import com.example.mvvm.model.Siswa
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,17 +35,12 @@ fun TampilSiswa(
         Pair(stringResource(id = R.string.gender), statusUiSiswa.gender),
         Pair(stringResource(R.string.alamat), statusUiSiswa.alamat)
     )
-    val items = listOf(
-        Pair(stringResource(R.string.nama), statusUiSiswa.nama),
-        Pair(stringResource(id = R.string.gender), statusUiSiswa.gender),
-        Pair(stringResource(R.string.alamat), statusUiSiswa.alamat)
-    )
 
     Scaffold(modifier = Modifier,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(id = R.string.detail), color = Color.White) },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(colorResource(id = R.color.purple_500)),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = colorResource(id = R.color.purple_500)),
             )
         }) { isiRuang ->
         Column(
@@ -61,13 +56,15 @@ fun TampilSiswa(
                         Text(item.first.uppercase(), fontSize = 16.sp)
                         Text(text = item.second, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
-                    Divider(thickness = dimensionResource(R.dimen.thickness_divider))
+                    HorizontalDivider(thickness = dimensionResource(R.dimen.thickness_divider))
                 }
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
                 onClick = onBackButtonClicked
             ) {
                 Text(stringResource(R.string.back))

@@ -13,10 +13,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myarsitekturmvvm.data.JenisK
-import com.example.myarsitekturmvvm.view.FormSiswa
-import com.example.myarsitekturmvvm.view.TampilSiswa
-import com.example.myarsitekturmvvm.viewmodel.SiswaViewModel
+import com.example.mvvm.model.DataJK.JenisK
+import com.example.mvvm.view.FormSiswa
+import com.example.mvvm.view.TampilSiswa
+import com.example.mvvm.viewmodel.SiswaViewModel
 
 enum class Navigasi {
     Formulir,
@@ -26,13 +26,11 @@ enum class Navigasi {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SiswaApp(
-    //edit 1 : parameter viewModel
     modifier: Modifier = Modifier,
     viewModel: SiswaViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-    Scaffold { isiRuang ->
-        //edit 2 : tambahkan variabel uiState
+    Scaffold(modifier = modifier) { isiRuang ->
         val uiState by viewModel.statusUI.collectAsState()
         NavHost(
             navController = navController,
@@ -40,11 +38,9 @@ fun SiswaApp(
             modifier = Modifier.padding(isiRuang)
         ) {
             composable(route = Navigasi.Formulir.name) {
-                //edit 3 : tambahkan variable konteks
                 val konteks = LocalContext.current
                 FormSiswa(
-                    //edit 4 : parameter pilihanJK dan onSubmitButtonClicked
-                    pilihanJK = JenisK.map { id -> konteks.resources.getString(id) },
+                    pilihanJK = JenisK.map { id -> konteks.getString(id) },
                     onSubmitButtonClicked = {
                         viewModel.setSiswa(it)
                         navController.navigate(Navigasi.Detail.name)
@@ -53,7 +49,6 @@ fun SiswaApp(
             }
             composable(route = Navigasi.Detail.name) {
                 TampilSiswa(
-                    //edit 5 : parameter statusUiSiswa
                     statusUiSiswa = uiState,
                     onBackButtonClicked = { cancelAndBackToFormulir(navController) }
                 )
